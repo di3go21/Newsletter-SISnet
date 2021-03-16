@@ -6,14 +6,8 @@ const vscode = require("vscode");
 const _path = require("path");
 function saveJSON(data, pathA) {
     const template = vscode.Uri.file(_path.join(pathA, 'assets', 'media', 'data.json'));
-    fs.writeFile(template.fsPath, data.categorias, (e) => {
-        if (e) {
-            console.error(e);
-        }
-        else {
-            console.log("ok");
-        }
-    });
+    fs.writeFileSync(template.fsPath, data.categorias);
+    vscode.commands.executeCommand('newsletter-sisnet-front-end.newsLetterFront-End');
 }
 exports.saveJSON = saveJSON;
 //# sourceMappingURL=saveJSON.js.map

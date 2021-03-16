@@ -1,25 +1,15 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+
 import * as vscode from 'vscode';
 import _path = require('path');
 import fs = require('fs');
 import { saveJSON } from './utils/saveJSON';
-import { generarNodos, generarHTML} from './utils/generateHTMLFunc';
-import { MiVersion } from './models/MiVersion';
+import { generarNodos, generarNodosForm, generarNodosFormEdit, generarHTML} from './utils/generateHTMLFunc';
+import {categorias, respuestaPositiva, respuestaNegativa} from './utils/variables';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "newsletter-sisnet-front-end" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerCommand('newsletter-sisnet-front-end.newsLetterFront-End', (uri: vscode.Uri) => {
-		// The code you place here will be executed every time your command is executed
+
 		const panel = vscode.window.createWebviewPanel(
 			'Newsletter Sisnet Front-End',
 			'Newsletter Sisnet Front-End',
@@ -37,8 +27,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	});
 
-	let disposable2 = vscode.commands.registerCommand('newsletter-sisnet-front-end.newsLetterFront-End-Form', (uri: vscode.Uri) => {
-		// The code you place here will be executed every time your command is executed
+	let disposableForm = vscode.commands.registerCommand('newsletter-sisnet-front-end.newsLetterFront-End-Form', (uri: vscode.Uri) => {
+		
 		const panel = vscode.window.createWebviewPanel(
 			'Newsletter Sisnet Front-End-Form',
 			'Newsletter Sisnet Front-End-Form',
@@ -55,21 +45,50 @@ export function activate(context: vscode.ExtensionContext) {
 		panel.webview.html = getTemplateForm(context, panel);
 		panel.webview.onDidReceiveMessage(data => {
 			saveJSON(data,context.extensionPath);
-			crearHTML(context, panel, data);
+			vscode.window.showInformationMessage('¿Deseas generar un fichero HTML?', respuestaPositiva, respuestaNegativa)
+				.then(respuesta => {
+					if (respuesta == respuestaPositiva)
+						crearHTML(context, panel, data);
+				});
 		})
 
 
 	});
 
+	let disposableEdit = vscode.commands.registerCommand('newsletter-sisnet-front-end.newsLetterFront-End-Edit', (uri: vscode.Uri) => {
+		
+		const panel = vscode.window.createWebviewPanel(
+			'Newsletter Sisnet Front-End-Edit',
+			'Newsletter Sisnet Front-End-Edit',
+			vscode.ViewColumn.One,
+			{
+				retainContextWhenHidden: true,
+				enableScripts: true,
+				localResourceRoots: [
+					vscode.Uri.file(_path.join(context.extensionPath, 'assets'))
+				]
+			}
+		);
 
+		panel.webview.html = getTemplateEdit(context, panel);
+		panel.webview.onDidReceiveMessage(data => {
+			saveJSON(data,context.extensionPath);
+			vscode.window.showInformationMessage('¿Deseas generar un fichero HTML?', respuestaPositiva, respuestaNegativa)
+				.then(respuesta => {
+					if (respuesta == respuestaPositiva)
+						crearHTML(context, panel, data);
+				});
+		})
+
+	});
 
 	context.subscriptions.push(disposable);
-	context.subscriptions.push(disposable2);
+	context.subscriptions.push(disposableForm);
+	context.subscriptions.push(disposableEdit);
+
 }
 
-
-
-function crearHTML(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, data: any){console.log("hey")
+function crearHTML(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, data: any){
 
 	const template = vscode.Uri.file(_path.join(context.extensionPath, 'assets', 'media', 'template.html'));
 	const templateNew = vscode.Uri.file(_path.join(context.extensionPath,'assets', 'media', 'newsletter.html'));
@@ -87,17 +106,17 @@ function crearHTML(context: vscode.ExtensionContext, panel: vscode.WebviewPanel,
 
 	var htmlAsStringToArray = htmlAsString.split("<script>");
 
-	htmlAsString = htmlAsStringToArray[0] + htmlAsStringToArray[1].split("<script>")[1];
-
-	console.log(htmlAsStringToArray);
+	htmlAsString = htmlAsStringToArray[0] + htmlAsStringToArray[1].split("</script>")[1];
 
     fs.writeFile(templateNew.fsPath,htmlAsString, (e) => {
         if (e) {
-            console.error(e)
+            console.error(`Error: ${e}`)
         } else {
             console.log("ok")
         }
     });
+
+	vscode.window.showInformationMessage("Fichero HTML generado");
 
 }
 
@@ -126,41 +145,24 @@ function getTemplate(context: vscode.ExtensionContext, panel: vscode.WebviewPane
 }
 
 function getTemplateForm(context: vscode.ExtensionContext, panel: vscode.WebviewPanel) {
-	const categorias = ['version', 'aviso', 'version_en_desarrollo', 'aniadido', 'cambiado', 'obsoleto', 'eliminado', 'arreglado', 'seguridad', 'dependencias'];
 	const template = vscode.Uri.file(_path.join(context.extensionPath, 'assets', 'media', 'template.html'));
 	var htmlAsString = fs.readFileSync(template.fsPath).toString();
 
-	categorias.forEach(categoria => {
-
-		if (categoria == "version" || categoria == "version_en_desarrollo") {
-
-			htmlAsString = htmlAsString.replace("{{" + categoria + "}}", `
-				<li>
-				<input type="text" name="${categoria}">
-				</li>
-				`);
-
-		}
-		else {
-
-			htmlAsString = htmlAsString.replace("{{" + categoria + "}}", `
-				<li class='${categoria}-class'>
-				<input type="text" name="${categoria}">
-				<input class="sumBoton" type="button" value="+" onclick="sum()">
-				<input class="resBoton" type="button" value="-" onclick="res()">
-				</li>
-				`);
-
-		}
-
-		htmlAsString = htmlAsString.replace("{{button}}", `<input type="submit" onclick=guardar() value="guardar">`);
-
-	});
-
+	htmlAsString = generarNodosForm(categorias, htmlAsString);
 	return htmlAsString;
 
-	//return fs.readFileSync(template.fsPath).toString();
 }
 
-// this method is called when your extension is deactivated
+function getTemplateEdit(context: vscode.ExtensionContext, panel: vscode.WebviewPanel) {
+	const template = vscode.Uri.file(_path.join(context.extensionPath, 'assets', 'media', 'template.html'));
+	const dataUri = vscode.Uri.file(_path.join(context.extensionPath, 'assets', 'media', 'data.json'));
+	var htmlAsString = fs.readFileSync(template.fsPath).toString();
+	var data = JSON.parse(fs.readFileSync(dataUri.fsPath).toString());
+	
+	htmlAsString = generarNodosFormEdit(data, htmlAsString);
+
+	return htmlAsString;
+	
+}
+
 export function deactivate() { }

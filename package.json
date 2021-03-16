@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "onCommand:newsletter-sisnet-front-end.newsLetterFront-End",
-    "onCommand:newsletter-sisnet-front-end.newsLetterFront-End-Form"
+    "onCommand:newsletter-sisnet-front-end.newsLetterFront-End-Form",
+    "onCommand:newsletter-sisnet-front-end.newsLetterFront-End-Edit"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -24,6 +25,11 @@
       {
         "command": "newsletter-sisnet-front-end.newsLetterFront-End-Form",
         "title": "newsletter Front-End-Form",
+        "category": "SISnet Newsletter Front-End"
+      },
+      {
+        "command": "newsletter-sisnet-front-end.newsLetterFront-End-Edit",
+        "title": "newsletter Front-End-Edit",
         "category": "SISnet Newsletter Front-End"
       }
     ]
