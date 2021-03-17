@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		.no_decor{
+			list-style: none;
+		}
+		.centrar-boton{
+			margin-bottom: 20px;
+		}
+	</style>
 </head>
-
 <body>
-
 	<table style="background-color: #b9e0f1;width: 100%;">
 		<tbody>
 			<tr>
@@ -37,7 +42,6 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
 									<table
 										style="margin: 30px 0 30px 75px; width: 450px; padding: 25px; background-color: rgb(242, 242, 242); box-shadow: rgba(201, 201, 201, 0.75) 3px 3px 4px 0px; color: rgb(109, 109, 109); font-family: Verdana,Helvetica,Arial; color:#6D6D6D;">
@@ -46,19 +50,14 @@
 												<td>
 													<p
 														style="font-family: Verdana,Helvetica,Arial; color:#6D6D6D; font-weight:bold; font-size: 26px;  padding:0 auto; margin-top: 0px; margin-bottom: 0px;">
-														{{version}}
-														<span
-															style=" font-size: 24px; font-weight:bold; color:#37abd4;">para
-															Front</span>
+														<div><span style="font-weight: bold;">[</span><div style="display: inline-block;">{{version}}</div><span style="font-weight: bold; margin-right: 10px;">]</span><span
+														style="font-size: 15px; font-weight:bold; color:#37abd4;">para Front</span></div>
 													</p>
 												</td>
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
-
-
 									<!-- Avisos -->
 									<table
 										style="margin-bottom: 30px; padding: 20px; background-color:rgb(255, 255, 200); margin-left: 30px;">
@@ -72,9 +71,7 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
-
 									<!-- Añadido -->
 									<table style=" margin-left: 30px;">
 										<tbody>
@@ -99,7 +96,6 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
 									<!-- Cambiado -->
 									<table style=" margin-left: 30px;">
@@ -125,7 +121,6 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
 									<!-- Obsoleto -->
 									<table style=" margin-left: 30px;">
@@ -151,7 +146,6 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
 									<!-- Eliminado -->
 									<table style=" margin-left: 30px;">
@@ -177,7 +171,6 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
 									<!-- Corregido -->
 									<table style=" margin-left: 30px;">
@@ -203,7 +196,6 @@
 											</tr>
 										</tbody>
 									</table>
-
 									<br />
 									<!-- Seguridad -->
 									<table style=" margin-left: 30px;">
@@ -261,12 +253,12 @@
 										</tbody>
 									</table>
 									<br />
-
 									<!-- SISnet Dependencias -->
-									<table style="width:540px;margin:40px 30px 0 30px;border-bottom:2px solid #a0a0a0">
+									<table
+										style="width:540px; margin: 40px 30px 0 30px; border-bottom: 2px solid #A0A0A0;">
 										<tbody>
 											<tr>
-												<td style="width:30px;margin-top:5px">
+												<td style="width:30px; margin-top: 5px;">
 													<img
 														src="https://www.sisnet360.com/media/img/newsletter/front/dependencias-icon.png">
 												</td>
@@ -274,21 +266,28 @@
 													<h2
 														style="margin: 0 auto; font-family: Verdana,Helvetica,Arial; color:#6D6D6D; font-size:22px; padding-left: 10px;">
 														Dependencias</h2>
-														<ul style="margin:0 40px 0 0; padding: 0;">
-															{{dependencias}}
-														</ul>													
-
 												</td>
 											</tr>
 										</tbody>
 									</table>
 									<br />
-
-
+									<table style="margin-left: 30px;">
+										<tbody>
+											<tr>
+												<td
+													style="font-family: Verdana,Helvetica,Arial; color:#6D6D6D; line-height: 25px;">
+													<ul style="margin:0 40px 0 0; padding: 0;">
+														{{dependencias}}
+													</ul>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<br />
+									<tr><td style="margin: 0 auto; font-family: Verdana,Helvetica,Arial; color:#6D6D6D; font-size:22px; padding-left: 30px; text-align: center;">{{button}}</td></tr>
 									<p>&nbsp;<br /></p>
 								</td>
 							</tr>
-							<tr><td style="margin: 0 auto; font-family: Verdana,Helvetica,Arial; color:#6D6D6D; font-size:22px; padding-left: 30px;">{{button}}</td></tr>
 							<tr>
 								<td style="background-color: #f4efed;">
 									<img src="https://www.sisnet360.com/media/img/newsletter/footer.png">
@@ -301,22 +300,16 @@
 			<tr>
 				<td>&nbsp;<br /></td>
 			</tr>
-
 		</tbody>
 	</table>
 	<script>
 
 		const vscode = acquireVsCodeApi();
 
-		window.addEventListener('message', event => {
-			const message = event.data; console.log("in")
-		});
-
 		function sum() {
 
 			var nodoPadre = event.target.parentElement.parentElement;
 			var nodoClon = nodoPadre.firstElementChild.cloneNode(true);
-			console.log(nodoClon);
 			nodoClon.firstElementChild.value = "";
 			nodoPadre.appendChild(nodoClon);
 			nodoClon.firstElementChild.focus();
@@ -344,16 +337,10 @@
 
 			}
 
-			vscode.webView
-
-			
-
 			vscode.postMessage({
 				command: 'save',
 				categorias: JSON.stringify(categorias)
 			});
-
-			console.log(categorias)
 
 		}
 
@@ -373,5 +360,4 @@
 
 	</script>
 </body>
-
 </html>
